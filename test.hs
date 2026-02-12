@@ -16,10 +16,11 @@ lucky x = "You lose!"
 -- >>> lucky 7
 -- "You win!"
 --
-triangles = [(a, b, c) | a <- [0 .. 10], b <- [0 .. 10], c <- [0 .. 10], a ^ 2 + b ^ 2 == c ^ 2]
+triangles :: [(Integer, Integer, Integer)]
+triangles = [(a, b, c) | a <- [0 .. 10], b <- [0 .. 10], c <- [0 .. 10], a ^ 2 + b ^ 2 == c ^ 2, a /= 0, b /= 0, c /= 0]
 
 --- >>> triangles
--- [(0,0,0),(0,1,1),(0,2,2),(0,3,3),(0,4,4),(0,5,5),(0,6,6),(0,7,7),(0,8,8),(0,9,9),(0,10,10),(1,0,1),(2,0,2),(3,0,3),(3,4,5),(4,0,4),(4,3,5),(5,0,5),(6,0,6),(6,8,10),(7,0,7),(8,0,8),(8,6,10),(9,0,9),(10,0,10)]
+-- [(3,4,5),(4,3,5),(6,8,10),(8,6,10)]
 --
 
 addVectors :: (Num a) => (a, a, a) -> (a, a, a) -> (a, a, a)
@@ -48,6 +49,17 @@ head'' (x : _) = Just x
 
 -- >>> head'' []
 -- Nothing
+-- >>> head'' [5,6,3,43,43]
+-- Just 5
+
+head''' :: [a] -> Maybe a
+head''' xs = case xs of
+  [] -> Nothing
+  (x : _) -> Just x
+
+-- >>> head'' []
+-- Nothing
+
 -- >>> head'' [5,6,3,43,43]
 -- Just 5
 
@@ -95,5 +107,115 @@ myCmp a b
   | a > b = GT
   | otherwise = EQ
 
--- >>> myCmp 5 5
+-- >>> 5 `myCmp` 5
 -- EQ
+
+isPythagora :: (Num a, Eq a) => (a, a, a) -> String
+isPythagora (a, b, c)
+  | a == 0 || b == 0 || c == 0 = "Cannot make a triangle if one side is 0 u fuck"
+  | condition = "Did you know that Ancient philosophers took excessive amounts of psychodelic supstances?"
+  | otherwise = "No, it is not in fact a pythagoric trangle"
+  where
+    condition = a ^ 2 + b ^ 2 == c ^ 2
+
+--- >>> isPythagora (0,5,6)
+--- >>> isPythagora (4,5,6)
+-- "Cannot make a triangle if one side is 0 u fuck"
+-- "No, it is not in fact a pythagoric trangle"
+--- >>> isPythagora (3,4,5)
+-- "Did you know that Ancient philosophers took excessive amounts of psychodelic supstances?"
+
+initials :: String -> String -> String
+initials first last = [f] ++ ". " ++ [l] ++ "."
+  where
+    (f : _) = first
+    (l : _) = last
+
+-- >>> initials "Haskell" "Curry"
+-- "H. C."
+
+calcDensities :: (RealFloat a) => [(a, a)] -> [a]
+-- calcDensities xs = [density m v | (m, v) <- xs]
+--   where
+--     density m v = m / v
+calcDensities xs = [density | (m, v) <- xs, let density = m / v]
+
+-- >>> calcDensities [(1,5),(1,2)]
+-- [0.2,0.5]
+
+cylinder :: (RealFloat a) => a -> a -> a
+cylinder r h =
+  let sideArea = 2 * pi * r * h
+      topArea = pi * r ^ 2
+   in sideArea + 2 * topArea
+
+-- >>>cylinder 2 5
+-- 87.96459430051421
+
+-- >>> [if 5>3 then "Woo" else "Boo", if 'a' > 'b' then "Foo" else "Bar"]
+-- ["Woo","Bar"]
+
+maximum' :: (Ord a) => [a] -> a
+maximum' [] = error "Fuck off"
+maximum' [x] = x
+maximum' (x : xs)
+  | x > maxElem = x
+  | otherwise = maxElem
+  where
+    maxElem = maximum' xs
+
+-- >>> maximum' [1,8,3,4,5]
+-- 8
+
+replicate' :: (Num a, Ord a) => a -> a -> [a]
+replicate' x y
+  | x <= 0 = []
+  | otherwise = y : replicate' (x - 1) y
+
+-- >>> replicate' 5 2
+-- [2,2,2,2,2]
+
+take' :: (Num i, Ord i) => i -> [a] -> [a]
+take' n _
+  | n <= 0 = []
+take' _ [] = []
+take' n (x : xs) = x : take' (n - 1) xs
+
+-- >>> take' 3 [1,2,3,4]
+-- [1,2,3]
+
+reverse' :: [a] -> [a]
+reverse' [] = []
+reverse' (x : xs) = reverse' xs ++ [x]
+
+-- >>> reverse' [1,2,3]
+-- [3,2,1]
+
+zip' :: [a] -> [b] -> [(a, b)]
+zip' _ [] = []
+zip' [] _ = []
+zip' (x : xs) (y : ys) = (x, y) : zip' xs ys
+
+-- >>> zip' [1,2,3] [4,5,8]
+-- [(1,4),(2,5),(3,8)]
+
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' _ [] = False
+elem' elem (x : xs)
+  | elem == x = True
+  | otherwise = elem' elem xs
+
+-- >>> elem' 1 [2,3,4,1]
+-- True
+
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x : xs) =
+  let smallerSorted = quicksort [a | a <- xs, a <= x]
+      biggerSorted = quicksort [a | a <- xs, a >= x]
+   in smallerSorted ++ [x] ++ biggerSorted
+
+-- >>> quicksort [10,2,32,4,53,21,2,1]
+-- [1,2,2,2,4,10,21,32,53]
+
+--
