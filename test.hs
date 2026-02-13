@@ -218,4 +218,55 @@ quicksort (x : xs) =
 -- >>> quicksort [10,2,32,4,53,21,2,1]
 -- [1,2,2,2,4,10,21,32,53]
 
+-- max is a function which takes an element a which implements Ordered typeclass and returns a function that takes in a and returns a
+-- >>> :t max
+-- max :: Ord a => a -> a -> a
+
+-- max 4 is a function which takes in a and returns a
+-- >>> :t (max 4)
+-- (max 4) :: (Ord a, Num a) => a -> a
+
+-- max 4 5 is not a function, it's a value.
+-- >>> :t (max 4) 5
+-- (max 4) 5 :: (Ord a, Num a) => a
+
+-- isn't currying fucking briliant?
+
+multThree :: (Num a) => a -> a -> a -> a
+multThree x y z = x * y * z
+
 --
+-- >>> :t multThree
+-- multThree :: Num a => a -> a -> a -> a
+--
+-- >>> :t multThree 3
+-- multThree 3 :: Num a => a -> a -> a
+--
+-- >>> :t multThree 3 3
+-- multThree 3 3 :: Num a => a -> a
+--
+-- >>> :t multThree 3 3 3
+-- multThree 3 3 3 :: Num a => a
+
+-- partial funcs
+compareWithTen :: (Num a, Ord a) => a -> Ordering
+compareWithTen = compare 10
+
+-- >>> :t compareWithTen
+-- compareWithTen :: (Num a, Ord a) => a -> Ordering
+-- >>> compareWithTen 5
+-- GT
+
+isUpperCase :: Char -> Bool
+isUpperCase = (`elem` ['A' .. 'Z'])
+
+--- >>> isUpperCase 'L'
+-- True
+
+doubleList :: (Num a) => [a] -> [a]
+doubleList = map (* 2)
+
+--- >>> doubleList [1,2,3]
+-- [2,4,6]
+
+-- Some higher-orderism is in order
