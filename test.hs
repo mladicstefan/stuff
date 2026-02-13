@@ -1,5 +1,7 @@
 module Test where
 
+import Data.Type.Equality (apply)
+
 factorial :: (Num x, Enum x) => x -> x
 factorial x = product [1 .. x]
 
@@ -269,4 +271,20 @@ doubleList = map (* 2)
 --- >>> doubleList [1,2,3]
 -- [2,4,6]
 
--- Some higher-orderism is in order
+applyTwice :: (a -> a) -> a -> a
+applyTwice f x = f (f x)
+
+--- >>> applyTwice doubleList [1,2,3]
+-- [4,8,12]
+--
+
+--- >>> zipWith (*) [1,2,3] [1,2,3]
+-- [1,4,9]
+
+zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f (x : xs) (y : ys) = f x y : zipWith' f xs ys
+
+-- >>> zipWith' (*) [1,2,3] [1,2,3]
+-- [1,4,9]
